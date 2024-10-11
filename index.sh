@@ -192,7 +192,7 @@ get_latest_version() {
 # Download the appropriate Next package
 download_next() {
     VERSION=${VERSION:-$LATEST_VERSION}
-    FILENAME="next.$VERSION.$OS-$ARCH.tar.gz"
+    FILENAME="next$VERSION.$OS-$ARCH.tar.gz"
     URL="https://github.com/mkideal/next/releases/download/v$VERSION/$FILENAME"
 
     print_step "Downloading Next package"
@@ -225,14 +225,14 @@ download_next() {
 # Install Next
 install_next() {
     print_step "Installing Next"
-    if ! tar -xzf "$DOWNLOAD_DIR/next.$VERSION.$OS-$ARCH.tar.gz" -C "$DOWNLOAD_DIR"; then
+    if ! tar -xzf "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH.tar.gz" -C "$DOWNLOAD_DIR"; then
         rm -rf "$DOWNLOAD_DIR"
         die "Failed to extract Next package."
     fi
 
     mkdir -p "$BIN_DIR" || die "Failed to create installation directory $BIN_DIR"
 
-    mv "$DOWNLOAD_DIR/next.$VERSION.$OS-$ARCH/bin/"* "$BIN_DIR/" || die "Failed to install Next binary."
+    mv "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH/bin/"* "$BIN_DIR/" || die "Failed to install Next binary."
 
     # Clean up the temporary directory
     rm -rf "$DOWNLOAD_DIR"
