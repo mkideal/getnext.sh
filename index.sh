@@ -319,7 +319,7 @@ main() {
     info "Use ${BOLD}${_cmd} --help${NC} to display help message."
     info
     info "For example:"
-    info "  ${BOLD}$_cmd --prefix=/usr/local --version=0.1.0${NC} -i"
+    info "  $_cmd --prefix=/usr/local --version=0.1.0 -i"
     info
 
     if [ "$IMMEDIATE_INSTALL" = false ]; then
