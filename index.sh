@@ -112,6 +112,9 @@ Options:
   -i, --immediate    Install immediately without waiting for countdown
   -h, --help         Display this help message
 
+Example:
+  $_cmd --prefix=/usr/local --version=0.1.0 -i
+
 By default, the script installs the latest version of Next to \$HOME/.local (on Linux) or \$HOME (on other systems).
 EOF
 }
@@ -315,12 +318,11 @@ main() {
     fi
 
     info
-    info "If you want to change these locations, please use the ${BOLD}--prefix=PREFIX${NC} command-line option."
-    info "To install a specific version, use the ${BOLD}--version=VERSION${NC} command-line option."
-    info "Use ${BOLD}${_cmd} --help${NC} to display help message."
+    info "Now, next${BOLD}$LATEST_VERSION${NC} will be installed to ${BOLD}$PREFIX${NC}."
     info
-    info "For example:"
-    info "  $_cmd --prefix=/usr/local --version=0.1.0 -i"
+    info "If you want to change these locations, please use the ${BOLD}--prefix=PREFIX${NC} option."
+    info "To install a specific version, use the ${BOLD}--version=VERSION${NC} option."
+    info "Use ${BOLD}${_cmd} --help${NC} to display help message."
     info
 
     if [ "$IMMEDIATE_INSTALL" = false ]; then
