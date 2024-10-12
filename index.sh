@@ -144,6 +144,7 @@ while [ $# -gt 0 ]; do
             ;;
         *)
             error "unknown option $1"
+            echo
             print_help
             exit 1
             ;;
