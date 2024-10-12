@@ -2,6 +2,11 @@
 
 set -eu
 
+_cmd=$0
+if [ "$_cmd" = "sh" ]; then
+    _cmd="sh -s --"
+fi
+
 # Check if the terminal supports colors
 supports_color() {
     if [ -t 1 ]; then
@@ -99,7 +104,7 @@ IMMEDIATE_INSTALL=false
 # Function to print help message
 print_help() {
     cat << EOF
-Usage: $0 [OPTIONS]
+Usage: $_cmd [OPTIONS]
 
 Options:
   --prefix=PREFIX    Specify the installation prefix (must be an absolute path)
@@ -311,7 +316,10 @@ main() {
     info
     info "If you want to change these locations, please use the ${BOLD}--prefix=PREFIX${NC} command-line option."
     info "To install a specific version, use the ${BOLD}--version=VERSION${NC} command-line option."
-    info "Use ${BOLD}--help${NC} to display this help message."
+    info "Use ${BOLD}${_cmd} --help${NC} to display help message."
+    info
+    info "For example:"
+    info "  ${BOLD}$_cmd --prefix=/usr/local --version=0.1.0${NC} -i"
     info
 
     if [ "$IMMEDIATE_INSTALL" = false ]; then
