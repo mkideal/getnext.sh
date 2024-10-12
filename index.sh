@@ -110,7 +110,7 @@ Options:
   --prefix=PREFIX    Specify the installation prefix (must be an absolute path)
   --version=VERSION  Specify the version to install
   -i, --immediate    Install immediately without waiting for countdown
-  --help             Display this help message
+  -h, --help         Display this help message
 
 By default, the script installs the latest version of Next to \$HOME/.local (on Linux) or \$HOME (on other systems).
 EOF
@@ -138,7 +138,7 @@ while [ $# -gt 0 ]; do
             IMMEDIATE_INSTALL=true
             shift
             ;;
-        --help)
+        -h|--help)
             print_help
             exit 0
             ;;
