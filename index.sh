@@ -94,6 +94,7 @@ die() {
 # Initialize variables
 PREFIX=""
 VERSION=""
+IMMEDIATE_INSTALL=false
 
 # Function to print help message
 print_help() {
@@ -103,6 +104,7 @@ Usage: $0 [OPTIONS]
 Options:
   --prefix=PREFIX    Specify the installation prefix (must be an absolute path)
   --version=VERSION  Specify the version to install
+  -i, --immediate    Install immediately without waiting for countdown
   --help             Display this help message
 
 By default, the script installs the latest version of Next to \$HOME/.local (on Linux) or \$HOME (on other systems).
@@ -125,6 +127,10 @@ while [ $# -gt 0 ]; do
             ;;
         --version=*)
             VERSION="${1#--version=}"
+            shift
+            ;;
+        -i|--immediate)
+            IMMEDIATE_INSTALL=true
             shift
             ;;
         --help)
@@ -308,7 +314,9 @@ main() {
     info "Use ${BOLD}--help${NC} to display this help message."
     info
 
-    countdown
+    if [ "$IMMEDIATE_INSTALL" = false ]; then
+        countdown
+    fi
 
     download_next
     install_next
