@@ -105,6 +105,7 @@ PREFIX=""
 VERSION=""
 IMMEDIATE_INSTALL=false
 CACHE_DIR=""
+CONTINUE_DOWNLOAD=false
 BIN_DIR=""
 
 # Function to print help message
@@ -116,6 +117,7 @@ Options:
   --prefix=PREFIX    Specify the installation prefix (must be an absolute path)
   --version=VERSION  Specify the version to install
   --cache-dir=DIR    Specify the cache directory to store downloaded files
+  -c, --continue     Continue downloading a partially downloaded file (only with --cache-dir and wget)
   -i, --immediate    Install immediately without waiting for countdown
   -h, --help         Display this help message
 
@@ -149,6 +151,10 @@ while [ $# -gt 0 ]; do
             ;;
         --cache-dir=*)
             CACHE_DIR="${1#--cache-dir=}"
+            shift
+            ;;
+        -c|--continue)
+            CONTINUE_DOWNLOAD=true
             shift
             ;;
         -i|--immediate)
@@ -248,11 +254,11 @@ download_next() {
 
     # Download the Next package
     if command -v wget > /dev/null 2>&1; then
-        local _c=""
-        if [ ! -z "$CACHE_DIR" ]; then
-            _c="--continue"
+        local _continue=""
+        if [ "$CONTINUE_DOWNLOAD" = true ]; then
+            _continue="--continue"
         fi
-        if ! wget -q --show-progress --progress=bar:force:noscroll $_c -O "$TEMP_DIR/$FILENAME" "$URL"; then
+        if ! wget -q --show-progress --progress=bar:force:noscroll $_continue -O "$TEMP_DIR/$FILENAME" "$URL"; then
             rm -rf "$TEMP_DIR"
             die "Failed to download Next. Please check your internet connection and try again."
         fi
