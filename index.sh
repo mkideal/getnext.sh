@@ -103,6 +103,7 @@ die() {
 PREFIX=""
 VERSION=""
 IMMEDIATE_INSTALL=false
+BIN_DIR=""
 
 # Function to print help message
 print_help() {
@@ -194,11 +195,14 @@ set_default_dirs() {
             PREFIX="$HOME/.local"
         elif [ "$OS" = "mingw" ]; then
             PREFIX="$HOME/AppData/Local/Microsoft/WindowsApps"
+            BIN_DIR="$PREFIX"
         else
             PREFIX="$HOME"
         fi
     fi
-    BIN_DIR="$PREFIX/bin"
+    if [ -z "$BIN_DIR" ]; then
+        BIN_DIR="$PREFIX/bin"
+    fi
     print_sub_step "Binary directory: ${BOLD}$BIN_DIR${NC}"
 }
 
