@@ -6,9 +6,10 @@ GITHUB_ORG="mkideal"
 GITHUB_REPO="next"
 
 _cmd=$0
-if [ "$_cmd" = "sh" ]; then
-    _cmd="sh -s --"
-fi
+case "$_cmd" in
+    *index.sh) ;;
+    *) _cmd="sh -s --" ;;
+esac
 
 # Check if the terminal supports colors
 supports_color() {
@@ -108,7 +109,7 @@ BIN_DIR=""
 # Function to print help message
 print_help() {
     cat << EOF
-Usage: $_cmd [OPTIONS]
+Usage: $_cmd [Options]
 
 Options:
   --prefix=PREFIX    Specify the installation prefix (must be an absolute path)
@@ -165,7 +166,7 @@ done
 detect_os_arch() {
     print_step "Detecting system information"
     OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-    if [[ "$OS" == "mingw"* ]]; then
+    if [ "$OS" == "mingw"* ]; then
         OS="mingw"
     fi
     ARCH=$(uname -m)
