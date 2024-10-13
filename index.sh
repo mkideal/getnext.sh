@@ -124,7 +124,8 @@ Example:
 
 By default, the script installs the latest version of Next to:
   \$HOME/AppData/Local/Microsoft/WindowsApps (on Windows) 
-  \$HOME/.next/bin (on other systems).
+  \$HOME/.local/bin (on other systems, if \$HOME/.local/bin is in PATH)
+  \$HOME/bin (on other systems, if \$HOME/.local/bin is not in PATH)
 EOF
 }
 
