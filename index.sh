@@ -248,7 +248,11 @@ download_next() {
 
     # Download the Next package
     if command -v wget > /dev/null 2>&1; then
-        if ! wget -q --show-progress --progress=bar:force:noscroll -O "$TEMP_DIR/$FILENAME" "$URL"; then
+        local _c=""
+        if [ ! -z "$CACHE_DIR" ]; then
+            _c="--continue"
+        fi
+        if ! wget -q --show-progress --progress=bar:force:noscroll $_c -O "$TEMP_DIR/$FILENAME" "$URL"; then
             rm -rf "$TEMP_DIR"
             die "Failed to download Next. Please check your internet connection and try again."
         fi
