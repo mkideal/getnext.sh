@@ -123,9 +123,8 @@ Example:
   $_cmd --prefix=/usr/local --version=0.1.0 -i
 
 By default, the script installs the latest version of Next to:
-  \$HOME/.local (on Linux)
   \$HOME/AppData/Local/Microsoft/WindowsApps (on Windows) 
-  \$HOME (on other systems).
+  \$HOME/.next/bin (on other systems).
 EOF
 }
 
@@ -197,13 +196,14 @@ detect_os_arch() {
 set_default_dirs() {
     print_step "Setting up installation directories"
     if [ -z "$PREFIX" ]; then
-        if [ "$OS" = "linux" ]; then
-            PREFIX="$HOME/.local"
-        elif [ "$OS" = "mingw" ]; then
+        if [ "$OS" = "mingw" ]; then
             PREFIX="$HOME/AppData/Local/Microsoft/WindowsApps"
             BIN_DIR="$PREFIX"
         else
-            PREFIX="$HOME"
+            case $PATH in
+                *":$HOME/.local/bin"|"$HOME/.local/bin:"*|*":$HOME/.local/bin:"*) PREFIX="$HOME/.local" ;;
+                *) PREFIX="$HOME" ;;
+            esac
         fi
     fi
     if [ -z "$BIN_DIR" ]; then
