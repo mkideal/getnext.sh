@@ -2,6 +2,9 @@
 
 set -eu
 
+GITHUB_ORG="mkideal"
+GITHUB_REPO="next"
+
 _cmd=$0
 if [ "$_cmd" = "sh" ]; then
     _cmd="sh -s --"
@@ -158,6 +161,9 @@ done
 detect_os_arch() {
     print_step "Detecting system information"
     OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+    if [[ "$OS" == "mingw"* ]]; then
+        OS="mingw"
+    fi
     ARCH=$(uname -m)
     case $ARCH in
         x86_64|amd64) ARCH="amd64" ;;
@@ -166,7 +172,7 @@ detect_os_arch() {
         *) die "Unsupported architecture: $ARCH" ;;
     esac
     case $OS in
-        linux|darwin)
+        linux|darwin|mingw)
             if [ "$ARCH" = "386" ] && [ "$OS" = "darwin" ]; then
                 die "32-bit systems are not supported for macOS"
             fi
@@ -193,7 +199,7 @@ set_default_dirs() {
 
 # Get the latest stable version
 get_latest_version() {
-    local _url="https://api.github.com/repos/mkideal/next/releases/latest"
+    local _url="https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/releases/latest"
     print_step "Fetching latest version information"
     print_sub_step "URL: $_url"
     LATEST_VERSION=$(curl -sSf $_url | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
@@ -208,7 +214,7 @@ get_latest_version() {
 download_next() {
     VERSION=${VERSION:-$LATEST_VERSION}
     FILENAME="next$VERSION.$OS-$ARCH.tar.gz"
-    URL="https://github.com/mkideal/next/releases/download/v$VERSION/$FILENAME"
+    URL="https://github.com/${GITHUB_ORG}/${GITHUB_REPO}/releases/download/v$VERSION/$FILENAME"
 
     print_step "Downloading Next package"
     print_sub_step "URL: $URL"
