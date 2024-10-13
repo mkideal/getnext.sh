@@ -172,9 +172,6 @@ done
 detect_os_arch() {
     print_step "Detecting system information"
     OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-    if [ "$OS" == "mingw"* ]; then
-        OS="mingw"
-    fi
     ARCH=$(uname -m)
     case $ARCH in
         x86_64|amd64) ARCH="amd64" ;;
@@ -183,11 +180,13 @@ detect_os_arch() {
         *) die "Unsupported architecture: $ARCH" ;;
     esac
     case $OS in
-        linux|darwin|mingw)
-            if [ "$ARCH" = "386" ] && [ "$OS" = "darwin" ]; then
+        darwin)
+            if [ "$ARCH" = "386" ] ; then
                 die "32-bit systems are not supported for macOS"
             fi
         ;;
+        mingw*) OS="mingw" ;;
+        linux) ;;
         *) die "Unsupported operating system: $OS" ;;
     esac
     print_sub_step "Detected OS: ${BOLD}$OS${NC}"
