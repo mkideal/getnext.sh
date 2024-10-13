@@ -104,6 +104,7 @@ die() {
 PREFIX=""
 VERSION=""
 IMMEDIATE_INSTALL=false
+CACHE_DIR=""
 BIN_DIR=""
 
 # Function to print help message
@@ -114,6 +115,7 @@ Usage: $_cmd [Options]
 Options:
   --prefix=PREFIX    Specify the installation prefix (must be an absolute path)
   --version=VERSION  Specify the version to install
+  --cache-dir=DIR    Specify the cache directory to store downloaded files
   -i, --immediate    Install immediately without waiting for countdown
   -h, --help         Display this help message
 
@@ -143,6 +145,10 @@ while [ $# -gt 0 ]; do
             ;;
         --version=*)
             VERSION="${1#--version=}"
+            shift
+            ;;
+        --cache-dir=*)
+            CACHE_DIR="${1#--cache-dir=}"
             shift
             ;;
         -i|--immediate)
@@ -230,7 +236,12 @@ download_next() {
     print_sub_step "URL: $URL"
 
     # Create a temporary directory
-    TEMP_DIR=$(mktemp -d)
+    if [ ! -z "$CACHE_DIR" ]; then
+        TEMP_DIR="$CACHE_DIR"
+        mkdir -p "$TEMP_DIR" || die "Failed to create cache directory $TEMP_DIR"
+    else
+        TEMP_DIR=$(mktemp -d)
+    fi
     if [ $? -ne 0 ]; then
         die "Failed to create temporary directory"
     fi
