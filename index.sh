@@ -23,14 +23,14 @@ supports_color() {
 
 # Set color variables based on terminal support
 if supports_color; then
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    YELLOW='\033[0;33m'
-    BLUE='\033[0;94m'  # Light blue
-    MAGENTA='\033[0;35m'
-    CYAN='\033[0;36m'
-    BOLD='\033[1m'
-    NC='\033[0m' # No Color
+    RED=$'\e[31m'
+    GREEN=$'\e[32m'
+    YELLOW=$'\e[33m'
+    BLUE=$'\e[34m'
+    MAGENTA=$'\e[35m'
+    CYAN=$'\e[36m'
+    BOLD=$'\e[1m'
+    NC=$'\e[0m' # No Color
 else
     RED=''
     GREEN=''
