@@ -334,7 +334,7 @@ main() {
     fi
 
     info
-    info "Now, ${BOLD}next$LATEST_VERSION${NC} will be installed to ${BLUE}$PREFIX${NC}."
+    info "Now, ${BOLD}next$LATEST_VERSION${NC} will be installed to ${BOLD}${BLUE}$PREFIX${NC}."
     info
     info "If you want to change these locations, please use the ${BOLD}--prefix=PREFIX${NC} option."
     info "To install a specific version, use the ${BOLD}--version=VERSION${NC} option."
