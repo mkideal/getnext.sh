@@ -118,7 +118,10 @@ Options:
 Example:
   $_cmd --prefix=/usr/local --version=0.1.0 -i
 
-By default, the script installs the latest version of Next to \$HOME/.local (on Linux) or \$HOME (on other systems).
+By default, the script installs the latest version of Next to:
+  \$HOME/.local (on Linux)
+  \$HOME/AppData/Local/Microsoft/WindowsApps (on Windows) 
+  \$HOME (on other systems).
 EOF
 }
 
@@ -189,6 +192,8 @@ set_default_dirs() {
     if [ -z "$PREFIX" ]; then
         if [ "$OS" = "linux" ]; then
             PREFIX="$HOME/.local"
+        elif [ "$OS" = "mingw" ]; then
+            PREFIX="$HOME/AppData/Local/Microsoft/WindowsApps"
         else
             PREFIX="$HOME"
         fi
