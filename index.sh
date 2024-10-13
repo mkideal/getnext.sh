@@ -23,14 +23,14 @@ supports_color() {
 
 # Set color variables based on terminal support
 if supports_color; then
-    RED=$'\e[31m'
-    GREEN=$'\e[32m'
-    YELLOW=$'\e[33m'
-    BLUE=$'\e[34m'
-    MAGENTA=$'\e[35m'
-    CYAN=$'\e[36m'
-    BOLD=$'\e[1m'
-    NC=$'\e[0m' # No Color
+    RED=$(tput setaf 1)
+    GREEN=$(tput setaf 2)
+    YELLOW=$(tput setaf 3)
+    BLUE=$(tput setaf 4)
+    MAGENTA=$(tput setaf 5)
+    CYAN=$(tput setaf 6)
+    BOLD=$(tput bold)
+    NC=$(tput sgr0) # No Color
 else
     RED=''
     GREEN=''
