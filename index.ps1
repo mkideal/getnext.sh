@@ -39,11 +39,10 @@ function Get-Arch {
 function Install-Next {
     $version = Get-LatestVersion
     $arch = Get-Arch
-    $fileName = "next$version.windows-$arch.zip"
+    $pkgName = "next$version.windows-$arch"
+    $fileName = "$pkgName.zip"
     $url = "https://github.com/$GithubOrg/$GithubRepo/releases/download/v$version/$fileName"
     $installDir = [System.Environment]::GetFolderPath("LocalApplicationData") + "\Microsoft\WindowsApps"
-
-    Write-Color "Installing Next$version for $arch..."
 
     # Create a temporary directory
     $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
@@ -55,7 +54,6 @@ function Install-Next {
         Invoke-WebRequest -Uri $url -OutFile "$tempDir\$fileName"
 
         # Extract the zip file
-        Write-Color "Extracting files..."
         Expand-Archive -Path "$tempDir\$fileName" -DestinationPath $tempDir
 
         # Ensure the installation directory exists
@@ -65,7 +63,7 @@ function Install-Next {
 
         # Move the files to the installation directory
         Write-Color "Installing to $installDir..."
-        Move-Item -Path "$tempDir\next*.windows-$arch\bin\*" -Destination $installDir -Force
+        Move-Item -Path "$tempDir\$pkgName\bin\*" -Destination $installDir -Force
 
         Write-Color "Next has been successfully installed!" "Green"
         Write-Color "Run " -NoNewline
