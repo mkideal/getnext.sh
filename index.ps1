@@ -1,6 +1,6 @@
 # Next Installer for Windows
-# Usage: Invoke-Expression (Invoke-WebRequest -Uri https://getnext.sh/ps -UseBasicParsing).Content
-# Or: iwr -useb https://getnext.sh/ps | iex
+# Usage: Invoke-Expression (Invoke-WebRequest -Uri https://getnext.sh -UseBasicParsing).Content
+# Or: iwr -useb https://getnext.sh | iex
 
 $ErrorActionPreference = "Stop"
 
