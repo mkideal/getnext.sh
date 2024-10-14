@@ -101,7 +101,6 @@ die() {
 # Initialize variables
 PREFIX=""
 VERSION=""
-IMMEDIATE_INSTALL=false
 CACHE_DIR=""
 CONTINUE_DOWNLOAD=false
 BIN_DIR=""
@@ -116,7 +115,6 @@ Options:
   --version=VERSION  Specify the version to install
   --cache-dir=DIR    Specify the cache directory to store downloaded files
   -c, --continue     Continue downloading a partially downloaded file (only with --cache-dir and wget)
-  -i, --immediate    Install immediately without waiting for countdown
   -h, --help         Display this help message
 
 Example:
@@ -153,10 +151,6 @@ while [ $# -gt 0 ]; do
             ;;
         -c|--continue)
             CONTINUE_DOWNLOAD=true
-            shift
-            ;;
-        -i|--immediate)
-            IMMEDIATE_INSTALL=true
             shift
             ;;
         -h|--help)
@@ -363,10 +357,6 @@ main() {
         get_latest_version
     else
         LATEST_VERSION="$VERSION"
-    fi
-
-    if [ "$IMMEDIATE_INSTALL" = false ]; then
-        countdown
     fi
 
     download_next
