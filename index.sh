@@ -191,7 +191,7 @@ detect_os_arch() {
                 die "32-bit systems are not supported for macOS"
             fi
         ;;
-        mingw*) OS="mingw" ;;
+        mingw*) OS="windows" ;;
         linux) ;;
         *) die "Unsupported operating system: $OS" ;;
     esac
@@ -203,7 +203,7 @@ detect_os_arch() {
 set_default_dirs() {
     print_step "Setting up installation directories"
     if [ -z "$PREFIX" ]; then
-        if [ "$OS" = "mingw" ]; then
+        if [ "$OS" = "windows" ]; then
             PREFIX="$HOME/AppData/Local/Microsoft/WindowsApps"
             BIN_DIR="$PREFIX"
         else
@@ -236,6 +236,9 @@ get_latest_version() {
 download_next() {
     VERSION=${VERSION:-$LATEST_VERSION}
     FILENAME="next$VERSION.$OS-$ARCH.tar.gz"
+    if [ "$OS" = "windows" ]; then
+        FILENAME="next$VERSION.$OS-$ARCH.zip"
+    fi
     URL="https://github.com/${GITHUB_ORG}/${GITHUB_REPO}/releases/download/v$VERSION/$FILENAME"
 
     print_step "Downloading Next package"
@@ -277,9 +280,16 @@ download_next() {
 # Install Next
 install_next() {
     print_step "Installing Next"
-    if ! tar -xzf "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH.tar.gz" -C "$DOWNLOAD_DIR"; then
-        rm -rf "$DOWNLOAD_DIR"
-        die "Failed to extract Next package."
+    if [ "$OS" = "windows" ]; then
+        if ! unzip -q "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH.zip" -d "$DOWNLOAD_DIR"; then
+            [ -z "$CACHE_DIR" ] && rm -rf "$DOWNLOAD_DIR"
+            die "Failed to extract Next package."
+        fi
+    else
+        if ! tar -xzf "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH.tar.gz" -C "$DOWNLOAD_DIR"; then
+            [ -z "$CACHE_DIR" ] && rm -rf "$DOWNLOAD_DIR"
+            die "Failed to extract Next package."
+        fi
     fi
 
     mkdir -p "$BIN_DIR" || die "Failed to create installation directory $BIN_DIR"
@@ -287,7 +297,7 @@ install_next() {
     mv "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH/bin/"* "$BIN_DIR/" || die "Failed to install Next binary."
 
     # Clean up the temporary directory
-    rm -rf "$DOWNLOAD_DIR"
+    [ -z "$CACHE_DIR" ] && rm -rf "$DOWNLOAD_DIR"
 
     success "Next has been successfully installed!"
 }
