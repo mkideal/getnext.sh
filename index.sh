@@ -382,7 +382,7 @@ main() {
 
     info 
     info "${BOLD}${GREEN}Installation Complete!${NC}"
-    info "To start using Next, run: ${BOLD}$BIN_DIR/next${NC} or ${BOLD}next${NC} if you have added $BIN_DIR to your PATH."
+    info "Run 'next -h' to get started or run 'next version' to check the installed version."
 }
 
 # Run the installation
