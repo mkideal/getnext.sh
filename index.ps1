@@ -1,6 +1,6 @@
 # Next Installer for Windows
-# Usage: Invoke-Expression (Invoke-WebRequest -Uri https://getnext.sh -UseBasicParsing).Content
-# Or: iwr -useb https://getnext.sh | iex
+# Usage: Invoke-Expression (Invoke-WebRequest -Uri https://getnext.sh/ps -UseBasicParsing).Content
+# Or: iwr -useb https://getnext.sh/ps | iex
 
 $ErrorActionPreference = "Stop"
 
@@ -39,7 +39,7 @@ function Install-Next {
     $url = "https://github.com/$GithubOrg/$GithubRepo/releases/download/v$version/$fileName"
     $installDir = [System.Environment]::GetFolderPath("LocalApplicationData") + "\Microsoft\WindowsApps"
 
-    Write-Color "Installing Next version $version for $arch..." "Cyan"
+    Write-Color "Installing Next$version for $arch..."
 
     # Create a temporary directory
     $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
@@ -47,11 +47,11 @@ function Install-Next {
 
     try {
         # Download the zip file
-        Write-Color "Downloading $fileName..." "Yellow"
+        Write-Color "Downloading $fileName..."
         Invoke-WebRequest -Uri $url -OutFile "$tempDir\$fileName"
 
         # Extract the zip file
-        Write-Color "Extracting files..." "Yellow"
+        Write-Color "Extracting files..."
         Expand-Archive -Path "$tempDir\$fileName" -DestinationPath $tempDir
 
         # Ensure the installation directory exists
@@ -60,7 +60,7 @@ function Install-Next {
         }
 
         # Move the files to the installation directory
-        Write-Color "Installing to $installDir..." "Yellow"
+        Write-Color "Installing to $installDir..."
         Move-Item -Path "$tempDir\next*.windows-$arch\bin\*" -Destination $installDir -Force
 
         Write-Color "Next has been successfully installed!" "Green"
