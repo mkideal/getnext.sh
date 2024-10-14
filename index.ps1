@@ -50,7 +50,7 @@ function Install-Next {
 
     try {
         # Download the zip file
-        Write-Color "Downloading $fileName..."
+        Write-Color "Downloading $fileName"
         Invoke-WebRequest -Uri $url -OutFile "$tempDir\$fileName"
 
         # Extract the zip file
@@ -62,7 +62,7 @@ function Install-Next {
         }
 
         # Move the files to the installation directory
-        Write-Color "Installing to $installDir..."
+        Write-Color "Installing to $installDir"
         Start-Sleep -Milliseconds 100
         Move-Item -Path "$tempDir\$pkgName\bin\*" -Destination $installDir -Force
 

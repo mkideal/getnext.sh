@@ -45,6 +45,7 @@ fi
 
 # Print formatted messages
 print_step() {
+    echo
     echo "${GREEN}${BOLD}$1${NC}"
 }
 
@@ -64,11 +65,8 @@ align() {
 
 # Print success message
 success() {
-    local _prefix="${GREEN}Success: ${NC}"
-    local _prefix_length=9  # Length of "Success: " without color codes
     local _msg="$*"
-    printf "\n$_prefix"
-    align $_prefix_length "$_msg"
+    align 0 "${GREEN}$_msg${NC}"
 }
 
 # Print information message
@@ -232,6 +230,10 @@ get_latest_version() {
     print_sub_step "Latest version: ${BOLD}$LATEST_VERSION${NC}"
 }
 
+clear_last_line() {
+    printf "\033[1A\033[2K"
+}
+
 # Download the appropriate Next package
 download_next() {
     VERSION=${VERSION:-$LATEST_VERSION}
@@ -241,7 +243,7 @@ download_next() {
     fi
     URL="https://github.com/${GITHUB_ORG}/${GITHUB_REPO}/releases/download/v$VERSION/$FILENAME"
 
-    print_step "Downloading Next package"
+    print_step "Downloading $FILENAME"
     print_sub_step "URL: $URL"
 
     # Create a temporary directory
@@ -271,15 +273,16 @@ download_next() {
             die "Failed to download Next. Please check your internet connection and try again."
         fi
     fi
+    clear_last_line
 
     # Set the TEMP_DIR variable for use in the install_next function
     DOWNLOAD_DIR="$TEMP_DIR"
-    print_sub_step "Download completed successfully"
 }
 
 # Install Next
 install_next() {
-    print_step "Installing Next"
+    print_step "Installing to $BIN_DIR"
+    print_sub_step "Extracting $FILENAME"
     if [ "$OS" = "windows" ]; then
         if ! unzip -q "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH.zip" -d "$DOWNLOAD_DIR"; then
             [ -z "$CACHE_DIR" ] && rm -rf "$DOWNLOAD_DIR"
@@ -294,23 +297,21 @@ install_next() {
 
     mkdir -p "$BIN_DIR" || die "Failed to create installation directory $BIN_DIR"
 
+    print_sub_step "Copying binaries to $BIN_DIR"
     mv "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH/bin/"* "$BIN_DIR/" || die "Failed to install Next binary."
 
     # Clean up the temporary directory
     [ -z "$CACHE_DIR" ] && rm -rf "$DOWNLOAD_DIR"
 
-    success "Next has been successfully installed!"
+    print_step "Next has been successfully installed!"
 }
 
 # Check if the installation directory is in PATH
 check_path() {
-    print_step "Checking PATH configuration"
     if ! echo "$PATH" | tr ':' '\n' | grep -qx "$BIN_DIR"; then
         warn "Installation directory is not in your PATH."
         info "Add the following line to your shell configuration file (.bashrc, .zshrc, etc.):"
         info "${MAGENTA}export PATH=\"\$PATH:$BIN_DIR\"${NC}"
-    else
-        print_sub_step "Installation directory is already in PATH"
     fi
 }
 
@@ -348,7 +349,7 @@ print_welcome() {
     printf '╰'
     print_line "$width"
     printf '╯'
-    printf '%b\n\n' "$NC"
+    printf '%b\n' "$NC"
 }
 
 # Main installation process
@@ -364,14 +365,6 @@ main() {
         LATEST_VERSION="$VERSION"
     fi
 
-    info
-    info "Now, ${BOLD}next$LATEST_VERSION${NC} will be installed to ${BOLD}${BLUE}$PREFIX${NC}."
-    info
-    info "If you want to change these locations, please use the ${BOLD}--prefix=PREFIX${NC} option."
-    info "To install a specific version, use the ${BOLD}--version=VERSION${NC} option."
-    info "Use ${BOLD}${_cmd} --help${NC} to display help message."
-    info
-
     if [ "$IMMEDIATE_INSTALL" = false ]; then
         countdown
     fi
@@ -380,8 +373,7 @@ main() {
     install_next
     check_path
 
-    info 
-    info "${BOLD}${GREEN}Installation Complete!${NC}"
+    info
     info "Run ${BOLD}${MAGENTA}next -h${NC} to get started or run ${BOLD}${MAGENTA}next version${NC} to check the installed version."
 }
 
