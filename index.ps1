@@ -7,8 +7,12 @@ $ErrorActionPreference = "Stop"
 $GithubOrg = "mkideal"
 $GithubRepo = "next"
 
-function Write-Color([string]$Message, [string]$Color = "White") {
-    Write-Host $Message -ForegroundColor $Color
+function Write-Color([string]$Message, [string]$Color = "White", [switch]$NoNewline) {
+    if ($NoNewline) {
+        Write-Host $Message -ForegroundColor $Color -NoNewline
+    } else {
+        Write-Host $Message -ForegroundColor $Color
+    }
 }
 
 function Get-LatestVersion {

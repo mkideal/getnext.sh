@@ -56,8 +56,8 @@ align() {
     local _indent=$1
     local _text=$2
     local cols=$(tput cols)
-    if [ "$cols" -gt 80 ]; then
-        cols=100
+    if [ "$cols" -gt 120 ]; then
+        cols=120
     fi
     echo "$_text" | fold -s -w $((cols - _indent)) | sed -e "2,\$s/^/$(printf '%*s' $_indent '')/"
 }
