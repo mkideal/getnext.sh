@@ -1,2 +1,4 @@
 /index.sh
   Content-Type: text/x-shellscript
+/index.ps1
+  Content-Type: text/plain; charset=utf-8
