@@ -1,2 +1,5 @@
+# Redirect Windows PowerShell requests to index.ps1
+/ /index.ps1 200! User-Agent=WindowsPowerShell/*
+
+# Redirect all other requests to index.sh
 / /index.sh 200
-/ps /index.ps1 200
