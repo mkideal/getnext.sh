@@ -63,6 +63,7 @@ function Install-Next {
 
         # Move the files to the installation directory
         Write-Color "Installing to $installDir..."
+        Start-Sleep -Milliseconds 100
         Move-Item -Path "$tempDir\$pkgName\bin\*" -Destination $installDir -Force
 
         Write-Color "Next has been successfully installed!" "Green"
