@@ -382,7 +382,7 @@ main() {
 
     info 
     info "${BOLD}${GREEN}Installation Complete!${NC}"
-    info "Run ${BOLD}next -h${NC} to get started or run ${BOLD}next version${NC} to check the installed version."
+    info "Run ${BOLD}${MAGENTA}next -h${NC} to get started or run ${BOLD}${MAGENTA}next version${NC} to check the installed version."
 }
 
 # Run the installation

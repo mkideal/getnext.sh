@@ -65,9 +65,9 @@ function Install-Next {
 
         Write-Color "Next has been successfully installed!" "Green"
         Write-Color "Run " -NoNewline
-        Write-Color "next -h" "Cyan" -NoNewline
+        Write-Color "next -h" "Magenta" -NoNewline
         Write-Color " to get started or run " -NoNewline
-        Write-Color "next version" "Cyan" -NoNewline
+        Write-Color "next version" "Magenta" -NoNewline
         Write-Color " to check the installed version."
 
         # Check if the installation directory is in the PATH
