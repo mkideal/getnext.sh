@@ -382,7 +382,7 @@ main() {
 
     info 
     info "${BOLD}${GREEN}Installation Complete!${NC}"
-    info "Run 'next -h' to get started or run 'next version' to check the installed version."
+    info "Run ${BOLD}next -h${NC} to get started or run ${BOLD}next version${NC} to check the installed version."
 }
 
 # Run the installation

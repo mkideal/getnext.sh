@@ -64,7 +64,11 @@ function Install-Next {
         Move-Item -Path "$tempDir\next*.windows-$arch\bin\*" -Destination $installDir -Force
 
         Write-Color "Next has been successfully installed!" "Green"
-        Write-Color "Run 'next -h' to get started or run 'next version' to check the installed version."
+        Write-Color "Run " -NoNewline
+        Write-Color "next -h" "Cyan" -NoNewline
+        Write-Color " to get started or run " -NoNewline
+        Write-Color "next version" "Cyan" -NoNewline
+        Write-Color " to check the installed version."
 
         # Check if the installation directory is in the PATH
         $userPath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
