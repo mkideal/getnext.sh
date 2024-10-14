@@ -193,8 +193,8 @@ detect_os_arch() {
         linux) ;;
         *) die "Unsupported operating system: $OS" ;;
     esac
-    print_sub_step "Detected OS: ${BOLD}$OS${NC}"
-    print_sub_step "Detected architecture: ${BOLD}$ARCH${NC}"
+    print_sub_step "OS: ${BOLD}$OS${NC}"
+    print_sub_step "Architecture: ${BOLD}$ARCH${NC}"
 }
 
 # Set default binary and config directories based on OS
@@ -227,7 +227,7 @@ get_latest_version() {
         die "Failed to get the latest version. Please check your internet connection or try again later."
     fi
     LATEST_VERSION=${LATEST_VERSION#v} # Remove 'v' prefix if present
-    print_sub_step "Latest version: ${BOLD}$LATEST_VERSION${NC}"
+    print_sub_step "Latest: ${BOLD}$LATEST_VERSION${NC}"
 }
 
 clear_last_line() {
