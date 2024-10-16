@@ -101,8 +101,6 @@ die() {
 # Initialize variables
 PREFIX=""
 VERSION=""
-CACHE_DIR=""
-CONTINUE_DOWNLOAD=false
 BIN_DIR=""
 
 # Function to print help message
@@ -114,7 +112,6 @@ Options:
   --prefix=PREFIX    Specify the installation prefix (must be an absolute path)
   --version=VERSION  Specify the version to install
   --cache-dir=DIR    Specify the cache directory to store downloaded files
-  -c, --continue     Continue downloading a partially downloaded file (only with --cache-dir and wget)
   -h, --help         Display this help message
 
 Example:
@@ -143,14 +140,6 @@ while [ $# -gt 0 ]; do
             ;;
         --version=*)
             VERSION="${1#--version=}"
-            shift
-            ;;
-        --cache-dir=*)
-            CACHE_DIR="${1#--cache-dir=}"
-            shift
-            ;;
-        -c|--continue)
-            CONTINUE_DOWNLOAD=true
             shift
             ;;
         -h|--help)
@@ -241,32 +230,16 @@ download_next() {
     print_sub_step "URL: $URL"
 
     # Create a temporary directory
-    if [ ! -z "$CACHE_DIR" ]; then
-        TEMP_DIR="$CACHE_DIR"
-        mkdir -p "$TEMP_DIR" || die "Failed to create cache directory $TEMP_DIR"
-    else
-        TEMP_DIR=$(mktemp -d)
-    fi
+	TEMP_DIR=$(mktemp -d)
     if [ $? -ne 0 ]; then
         die "Failed to create temporary directory"
     fi
 
     # Download the Next package
-    if command -v wget > /dev/null 2>&1; then
-        local _continue=""
-        if [ "$CONTINUE_DOWNLOAD" = true ]; then
-            _continue="--continue"
-        fi
-        if ! wget -q --show-progress --progress=bar:force:noscroll $_continue -O "$TEMP_DIR/$FILENAME" "$URL"; then
-            rm -rf "$TEMP_DIR"
-            die "Failed to download Next. Please check your internet connection and try again."
-        fi
-    else
-        if ! curl -fSL --progress-bar "$URL" -o "$TEMP_DIR/$FILENAME"; then
-            rm -rf "$TEMP_DIR"
-            die "Failed to download Next. Please check your internet connection and try again."
-        fi
-    fi
+	if ! curl -fSL --progress-bar "$URL" -o "$TEMP_DIR/$FILENAME"; then
+		rm -rf "$TEMP_DIR"
+		die "Failed to download Next. Please check your internet connection and try again."
+	fi
     clear_last_line
 
     # Set the TEMP_DIR variable for use in the install_next function
@@ -279,12 +252,12 @@ install_next() {
     print_sub_step "Extracting $FILENAME"
     if [ "$OS" = "windows" ]; then
         if ! unzip -q "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH.zip" -d "$DOWNLOAD_DIR"; then
-            [ -z "$CACHE_DIR" ] && rm -rf "$DOWNLOAD_DIR"
+            rm -rf "$DOWNLOAD_DIR"
             die "Failed to extract Next package."
         fi
     else
         if ! tar -xzf "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH.tar.gz" -C "$DOWNLOAD_DIR"; then
-            [ -z "$CACHE_DIR" ] && rm -rf "$DOWNLOAD_DIR"
+            rm -rf "$DOWNLOAD_DIR"
             die "Failed to extract Next package."
         fi
     fi
@@ -295,7 +268,7 @@ install_next() {
     mv "$DOWNLOAD_DIR/next$VERSION.$OS-$ARCH/bin/"* "$BIN_DIR/" || die "Failed to install Next binary."
 
     # Clean up the temporary directory
-    [ -z "$CACHE_DIR" ] && rm -rf "$DOWNLOAD_DIR"
+    rm -rf "$DOWNLOAD_DIR"
 
     print_step "Next has been successfully installed!"
 }
